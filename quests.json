@@ -1,0 +1,44 @@
+{
+  "quests": [
+    {
+      "id": "q001",
+      "title": "Premier Sang",
+      "description": "Tue ton premier monstre hostile (zombie, squelette, araignée...).",
+      "reward_item": "Épée en fer",
+      "reward_icon": "⚔️",
+      "difficulty": "Facile",
+      "xp": 50,
+      "active": true
+    },
+    {
+      "id": "q002",
+      "title": "Mineur Débutant",
+      "description": "Extrais 64 blocs de pierre et trouve ton premier minerai de fer.",
+      "reward_item": "Pioche en pierre",
+      "reward_icon": "⛏️",
+      "difficulty": "Facile",
+      "xp": 75,
+      "active": true
+    },
+    {
+      "id": "q003",
+      "title": "Survivant du Nether",
+      "description": "Entre dans le Nether et reviens vivant avec au moins 1 bloc de Netherrack.",
+      "reward_item": "Armure en or",
+      "reward_icon": "🔥",
+      "difficulty": "Moyen",
+      "xp": 200,
+      "active": true
+    },
+    {
+      "id": "q004",
+      "title": "Dragon Slayer",
+      "description": "Bats l'Ender Dragon en Hardcore. Capture une preuve en screenshot.",
+      "reward_item": "Œuf de Dragon",
+      "reward_icon": "🐉",
+      "difficulty": "Légendaire",
+      "xp": 1000,
+      "active": true
+    }
+  ]
+}

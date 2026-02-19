@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Hardcore Survival</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+<body data-page="admin">
+
+<!-- ——— MODAL LOGIN ADMIN ——— -->
+<div class="modal-overlay" id="adminLoginOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🔐 Accès Admin</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mot de passe</label>
+      <input
+        type="password"
+        class="form-input"
+        id="adminPasswordInput"
+        placeholder="••••••••"
+        autofocus
+      >
+      <div class="form-error" id="adminLoginError"></div>
+    </div>
+    <div style="display:flex;gap:0.75rem">
+      <button class="btn btn-primary btn-full" onclick="submitAdminLogin()">Connexion</button>
+      <a href="index.html" class="btn btn-ghost">Retour</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- ——— HEADER ——— -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">⚔️</div>
+        <div class="logo-text">
+          <span class="logo-title">ADMIN PANEL</span>
+          <span class="logo-sub">Dashboard</span>
+        </div>
+      </a>
+      <nav class="header-nav">
+        <span class="hardcore-badge">🔐 ADMIN</span>
+        <a href="index.html" class="btn btn-ghost btn-sm" style="margin-left:0.5rem">← Vue joueur</a>
+        <button class="btn btn-danger btn-sm" onclick="adminLogout()" style="margin-left:0.25rem">Déconnexion</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ——— LAYOUT ADMIN ——— -->
+  <div class="admin-layout">
+
+    <!-- ——— SIDEBAR ——— -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-section-label">Navigation</div>
+      <button class="sidebar-link active" data-tab="validation" onclick="showAdminTab('validation');setActiveLink(this)">
+        ⏳ Validations
+        <span id="pendingBadge" style="margin-left:auto;background:var(--gold);color:var(--bg-void);border-radius:10px;padding:0.1rem 0.4rem;font-size:0.65rem;font-family:var(--pixel)"></span>
+      </button>
+      <button class="sidebar-link" data-tab="quests" onclick="showAdminTab('quests');setActiveLink(this)">
+        📜 Quêtes
+      </button>
+      <button class="sidebar-link" data-tab="add-quest" onclick="showAdminTab('add-quest');setActiveLink(this)">
+        ➕ Ajouter Quête
+      </button>
+      <button class="sidebar-link" data-tab="players" onclick="showAdminTab('players');setActiveLink(this)">
+        👥 Joueurs
+      </button>
+
+      <div class="sidebar-section-label" style="margin-top:1rem">Actions</div>
+      <button class="sidebar-link" onclick="refreshAdmin()">
+        🔄 Actualiser
+      </button>
+    </aside>
+
+    <!-- ——— MAIN ——— -->
+    <main class="admin-main">
+
+      <!-- Stats -->
+      <div class="stats-grid stagger" id="adminStats">
+        <div class="loading-overlay" style="grid-column:1/-1"><div class="loading-spinner"></div></div>
+      </div>
+
+      <!-- ——— TAB: VALIDATION ——— -->
+      <div class="tab-panel active" id="tab-validation">
+        <div class="section-header">
+          <h2 class="section-title">⏳ Quêtes en attente de validation</h2>
+          <p class="section-sub">Valide ou refuse les demandes des joueurs</p>
+        </div>
+        <div id="validationPanel">
+          <div class="loading-overlay"><div class="loading-spinner"></div> Chargement...</div>
+        </div>
+      </div>
+
+      <!-- ——— TAB: QUÊTES ——— -->
+      <div class="tab-panel" id="tab-quests">
+        <div class="section-header">
+          <h2 class="section-title">📜 Gestion des Quêtes</h2>
+          <p class="section-sub">Active, désactive ou supprime des quêtes</p>
+        </div>
+        <div id="questsTable" style="overflow-x:auto">
+          <div class="loading-overlay"><div class="loading-spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- ——— TAB: AJOUTER QUÊTE ——— -->
+      <div class="tab-panel" id="tab-add-quest">
+        <div class="section-header">
+          <h2 class="section-title">➕ Nouvelle Quête</h2>
+          <p class="section-sub">Crée une nouvelle quête visible par tous les joueurs</p>
+        </div>
+
+        <div class="admin-form fade-in">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Titre de la quête *</label>
+              <input type="text" class="form-input" id="newQuestTitle" placeholder="Ex: Survivant du Nether" maxlength="60">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Icône (emoji) *</label>
+              <input type="text" class="form-input" id="newQuestIcon" placeholder="🔥 ⚔️ 💎 ..." maxlength="4">
+            </div>
+          </div>
+
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Description *</label>
+              <textarea class="form-input" id="newQuestDesc" rows="3"
+                placeholder="Décris ce que le joueur doit accomplir..."
+                style="resize:vertical"></textarea>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Récompense (item) *</label>
+              <input type="text" class="form-input" id="newQuestReward" placeholder="Ex: Épée en diamant" maxlength="60">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Difficulté *</label>
+              <select class="form-input" id="newQuestDiff">
+                <option value="Facile">Facile</option>
+                <option value="Moyen" selected>Moyen</option>
+                <option value="Difficile">Difficile</option>
+                <option value="Légendaire">Légendaire</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">XP accordé</label>
+              <input type="number" class="form-input" id="newQuestXP" placeholder="100" min="0" max="9999" value="100">
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end">
+              <button class="btn btn-primary btn-full" onclick="addQuestFromForm()">
+                ➕ &nbsp; Ajouter la quête
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+            <div style="font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem">
+              📋 Alternative : Édite directement quests.json
+            </div>
+            <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;font-family:var(--mono);font-size:0.75rem;color:var(--text-mid);white-space:pre-wrap">
+{
+  "id": "q_unique_id",
+  "title": "Titre de ta quête",
+  "description": "Description détaillée...",
+  "reward_item": "Nom de la récompense",
+  "reward_icon": "⭐",
+  "difficulty": "Facile|Moyen|Difficile|Légendaire",
+  "xp": 100,
+  "active": true
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ——— TAB: JOUEURS ——— -->
+      <div class="tab-panel" id="tab-players">
+        <div class="section-header">
+          <h2 class="section-title">👥 Joueurs</h2>
+          <p class="section-sub">Vue d'ensemble de tous les joueurs</p>
+        </div>
+        <div id="playersTable" style="overflow-x:auto">
+          <div class="loading-overlay"><div class="loading-spinner"></div></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+  function setActiveLink(el) {
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function adminLogout() {
+    sessionStorage.removeItem('mc_admin_auth');
+    window.location.href = 'login.html';
+  }
+
+  async function refreshAdmin() {
+    UI.toast('Actualisation en cours...', 'info', 1500);
+    await loadAdminDashboard();
+    // Update pending badge
+    const pending = document.querySelectorAll('.validation-item').length;
+    const badge = document.getElementById('pendingBadge');
+    if (badge) badge.textContent = pending > 0 ? pending : '';
+  }
+
+  // After dashboard loads, update badge
+  const _origRender = renderValidationPanel;
+  // Hook into validation panel render to update badge
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new MutationObserver(() => {
+      const pending = document.querySelectorAll('.validation-item').length;
+      const badge = document.getElementById('pendingBadge');
+      if (badge) badge.textContent = pending > 0 ? pending : '';
+    });
+    const panel = document.getElementById('validationPanel');
+    if (panel) observer.observe(panel, { childList: true, subtree: true });
+  });
+</script>
+</body>
+</html>

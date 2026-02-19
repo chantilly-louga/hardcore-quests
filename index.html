@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quêtes — Hardcore Survival</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+</head>
+<body data-page="index">
+
+<div class="page-wrapper">
+
+  <!-- ——— HEADER ——— -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">⚔️</div>
+        <div class="logo-text">
+          <span class="logo-title" id="headerServerName">HARDCORE SURVIVAL</span>
+          <span class="logo-sub" id="headerSeason">Saison 1</span>
+        </div>
+      </a>
+      <nav class="header-nav" id="playerHeaderInfo">
+        <!-- Rempli par JS -->
+        <div class="loading-spinner"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ——— MAIN ——— -->
+  <main class="main-content">
+
+    <!-- Profil joueur -->
+    <div class="player-profile fade-in" id="playerProfile">
+      <div class="loading-overlay"><div class="loading-spinner"></div> Chargement...</div>
+    </div>
+
+    <!-- Récompenses obtenues -->
+    <div class="card fade-in" style="margin-bottom:2rem" id="rewardsCard">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+        <span style="font-size:1.2rem">🏆</span>
+        <h3 style="color:var(--gold)">Mes Récompenses</h3>
+      </div>
+      <div id="rewardsList" class="rewards-list">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+
+    <!-- Filtres + Quêtes -->
+    <div class="section-header">
+      <h2 class="section-title">📜 Tableau des Quêtes</h2>
+      <p class="section-sub">Complète les quêtes et demande la validation à l'admin</p>
+    </div>
+
+    <!-- Barre de filtres -->
+    <div class="filter-bar fade-in">
+      <div class="search-input-wrap">
+        <input type="text" class="search-input" id="questSearch" placeholder="Rechercher une quête...">
+      </div>
+      <div class="filter-pills" id="diffPills">
+        <!-- Rempli par JS -->
+      </div>
+      <div class="filter-pills" id="statusPills">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- Grille de quêtes -->
+    <div id="questsContainer" class="quests-grid">
+      <div class="loading-overlay" style="grid-column:1/-1">
+        <div class="loading-spinner"></div> Chargement des quêtes...
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ——— FOOTER ——— -->
+  <footer style="text-align:center;padding:1.5rem;font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);border-top:1px solid var(--border);margin-top:3rem">
+    <span class="hardcore-badge" style="margin-right:0.5rem">❤️ HARDCORE</span>
+    Bonne chance sur le serveur !
+  </footer>
+
+</div>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof CONFIG !== 'undefined') {
+      const nameEl = document.getElementById('headerServerName');
+      const subEl  = document.getElementById('headerSeason');
+      if (nameEl) nameEl.textContent = CONFIG.serverName?.toUpperCase() || 'HARDCORE SURVIVAL';
+      if (subEl)  subEl.textContent  = CONFIG.serverSeason || 'Saison 1';
+      document.title = `Quêtes — ${CONFIG.serverName || 'Hardcore Survival'}`;
+    }
+  });
+</script>
+</body>
+</html>

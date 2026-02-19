@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — Hardcore Survival</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+</head>
+<body data-page="login">
+
+<div class="login-page">
+  <div class="login-container">
+
+    <div class="login-logo">
+      <span class="login-logo-icon">⚔️</span>
+      <div class="login-title" id="serverName">Hardcore Survival</div>
+      <div class="login-sub" id="serverSeason">Saison 1</div>
+    </div>
+
+    <div class="login-box">
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="playerInput">Pseudo Minecraft</label>
+          <input
+            class="form-input"
+            type="text"
+            id="playerInput"
+            placeholder="Notch, Steve, Alex..."
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            maxlength="16"
+            autofocus
+          >
+          <div class="form-hint">Lettres, chiffres et _ uniquement • 2-16 caractères</div>
+          <div class="form-error" id="loginError"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="loginBtn">
+          ⚔️ &nbsp; Entrer dans le serveur
+        </button>
+      </form>
+
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center">
+        <a href="admin.html" class="btn btn-ghost btn-sm">
+          🔐 Dashboard Admin
+        </a>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);text-align:center">
+      ❤️ Serveur Hardcore — Mort permanente
+    </div>
+
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+  // Appliquer le nom du serveur depuis config
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof CONFIG !== 'undefined') {
+      const nameEl = document.getElementById('serverName');
+      const subEl  = document.getElementById('serverSeason');
+      if (nameEl) nameEl.textContent = CONFIG.serverName || 'Hardcore Survival';
+      if (subEl)  subEl.textContent  = CONFIG.serverSeason || 'Saison 1';
+      document.title = `Connexion — ${CONFIG.serverName || 'Hardcore Survival'}`;
+    }
+  });
+</script>
+</body>
+</html>
